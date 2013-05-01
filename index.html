@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>WPO</title>
+
+    <meta name="description" content="">
+    <meta name="author" content="Wim Leers">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <div class="slides">
+
+        <section>
+          <h1>Practical WPO intro</h1>
+          <p>
+            <small><a href="http://wimleers.com">wimleers.com</a> — Wim Leers — <a href="http://twitter.com/wimleers">@wimleers</a></small>
+          </p>
+          <p>
+            <small><a href="http://wimleers.com/talk/practical-wpo-intro-2013">wimleers.com/talk/practical-wpo-intro-2013</a></small>
+          </p>
+        </section>
+
+        <section>
+          <h2>TL;DR</h2>
+          <p>
+            Fast internet connection  ⇏ fast browsing
+          </p>
+
+          <aside class="notes">
+            If there's one thing you should remember from what I'm going to talk about, then it's the simple fact that a fast internet connection does not imply fast browsing.
+          </aside>
+        </section>
+
+        <section>
+          <section>
+            <h2>WTF is WPO anyway?</h2>
+            <p>
+              <abbr>WPO</abbr> = <em>Web Performance Optimization</em>
+            </p>
+          </section>
+          <section>
+            <h2>Coined in 2010</h2>
+            <figure class="quote">
+              <blockquote>[…] <strong>convergence of awareness, even urgency</strong>, on the business side and <strong>growing expertise</strong> in the tech community around web performance marks the beginning of a new industry that I’m calling “WPO” – Web Performance Optimization. […] WPO also <strong>improves the user experience, increases revenue, and reduces operating costs.</strong>
+              </blockquote>
+              <figcaption>Steve Souders, <cite><a href="http://www.stevesouders.com/blog/2010/05/07/wpo-web-performance-optimization/">WPO – Web Performance Optimization</a></cite></figcaption>
+            </figure>
+            <aside class="notes">
+              WPO existed in practice years before 2010, it just didn't have a name. It was called front-end performance, client-side performance, page loading performance, etc. Front-end performance is still commonly used today (<abbr>FEP</abbr>), but then it is usually intended to not cover aspects that include the server side.
+            </aside>
+          </section>
+          <section>
+            <h2>Optimize how?</h2>
+            <p>Full stack!</p>
+            <ul>
+              <li>Operating systems — e.g. <a href="http://www.cdnplanet.com/blog/tune-tcp-initcwnd-for-optimum-performance/"><code>initcwnd</code></a></li>
+              <li>Network infrastructure — e.g. LTE vs. 3G</li>
+              <li>TCP/IP — e.g. <a href="http://www.igvita.com/2011/10/20/faster-web-vs-tcp-slow-start/">TCP's slow start</a></li>
+              <li>HTTP — e.g. <a href="http://en.wikipedia.org/wiki/SPDY">no multiplexing support</a></li>
+              <li>Browsers — e.g. <code>&lt;script async&gt;</code></li>
+            </ul>
+            <aside class="notes">
+              WPO is a full-stack problem. In order to get web pages to render in the most optimal manner, we must optimize the web page itself and the way it is served: tune the server OS, ensure the server is in an appropriate data center, circumvent limitations of TCP/IP, HTTP, browsers.
+            </aside>
+          </section>
+          <section>
+            <h2>Optimize once?</h2>
+            <p style="margin-bottom: 1em;">Internet: evolving organism, accelerated by <a href="http://en.wikipedia.org/wiki/End-to-end_principle">end-to-end principle</a></p>
+            <ul>
+              <li>Bigger pipes</li>
+              <li>Better browsers</li>
+              <li>Different devices</li>
+              <li>Different applications</li>
+            </ul>
+          </section>
+          <aside class="notes">
+            <p>The internet is in many ways an evolving organism: it grows, it changes, applications come and go. HTTP is one such application, and the ecosystem built on top of HTTP has evolved significantly: from Web 1.0 to Web 2.0 to where we're currently at. HTTP is the application layer, but in many ways HTTP is now a de facto transport layer.</p>
+            <p>So it's really a never-ending optimization game! :) The parameters and rules of the game change continuously. And what's good for one use case may be bad for another, so it's continously weighing pros and cons.</p>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Why invest in WPO?</h2>
+          <ul>
+            <li class="fragment strikethrough">Because geeks love the beauty of a perfect system :)</li>
+            <li class="fragment">Speed ⇒ more &amp; happier visitors ⇒ more revenue</li>
+            <li class="fragment">Google: +0.5s ⇒ -20% searches</li>
+          </ul>
+        </section>
+
+        <section>
+          <section>
+            <h2>WPO theory</h2>
+            <h6>Don't worry, it'll be short.</h6>
+          </section>
+          <section>
+            <h2>Typical page load duration</h2>
+            <p>
+              <canvas id="page-load-time" width="400" height="400"></canvas>
+            </p>
+            <ul>
+              <li style="color: #53C3E5">CSS, JS, images, fonts …</li>
+              <li style="color: #52B294">HTML</li>
+            </ul>
+            <script>
+              window.onload = function() {
+                var ctx = document.getElementById("page-load-time").getContext("2d");
+                var data = [
+                  { value: 90, color: '#53C3E5' },
+                  { value: 10, color: '#52B294' }
+                ];
+                var chart = new Chart(ctx).Pie(data, { animation: false});
+              };
+            </script>
+            <aside class="notes">
+              <p>Typically, 80 to 90% of the time of loading a page is spent on loading all things that are referenced by the HTML of the page: CSS, JS, images, videos, fonts, and so on. Only 10% of the time is spent on loading the HTML itself (i.e. the server generating it and the client downloading and parsing it).</p>
+              <p>Optimizing the back-end (generating &amp; serving HTML) is important, but the potential gains are <em>much</em> higher on the front-end.
+            </aside>
+          </section>
+          <section>
+            <h2>The first WPO book</h2>
+            <img src="img/high-performance-web-sites.jpg" alt="Steve Souders' High Performance Web Sites book cover" />
+          </section>
+          <section>
+            <h2>The 14 Rules</h2>
+            <ol>
+              <li>Make fewer HTTP requests</li>
+              <li>Use a CDN</li>
+              <li>Add <code>Expires</code>/<code>Cache-Control</code> headers</li>
+              <li>Gzip textual files</li>
+              <li class="not-important">Put CSS at the top</li>
+              <li>Put JS at the bottom</li>
+              <li class="not-important">Avoid CSS expressions</li>
+              <li>Make JS and CSS external</li>
+              <li>Reduce DNS lookups</li>
+              <li>Minify JS</li>
+              <li>Avoid redirects</li>
+              <li class="not-important">Remove duplicate JS</li>
+              <li class="not-important">Configure ETags</li>
+              <li>Make AJAX cacheable</li>
+            </ol>
+            <aside class="notes">
+              <p>1. Less round trips. 2. Reduced latency. 3. ±70% less bytes. 4. Better client-side caching. 6. JS downloading/executation blocks everything else, even downloading subsequent resources. 8. Increase reuse/cacheability. 9. Less "widgets" is better; depends on browser/OS/website! 10. 20–50% less bytes. 11. Les round trips. 14. Client-side caching.
+              </p>
+            </aside>
+          </section>
+          <section>
+            <h2>Example: make fewer HTTP requests</h2>
+            <ul>
+              <li>Aggregate CSS &amp; JS: <code>foo.css</code> + <code>bar.css</code> = <code>a54d9f.css</code></li>
+              <li>Inlining: <a href="http://en.wikipedia.org/wiki/Data_URI_scheme"><code>data:</code></a> URIs</li>
+              <li>CSS sprites (combine background images):
+                <img style="display: block; margin: 1em auto" src="img/google%20sprite.png" alt="Google sprite example" width="167" height="431" />
+              </li>
+            </ul>
+            <aside class="notes">
+              Easier said than done of course. 
+            </aside>
+          </section>
+          <section>
+            <h2>Example: leverage new standards</h2>
+            <ul>
+              <li><code>border-radius</code>, no images … but IE8? <small>(<a href="http://caniuse.com/border-radius">caniuse.com/border-radius</a>)</small></li>
+              <li>SVG for icons … but IE8 &amp; Android 2.3? <small>(<a href="http://caniuse.com/svg">caniuse.com/svg</a>)</small></li>
+              <li>WOFF for fonts … but IE8 &amp; Android? <small>(<a href="http://caniuse.com/woff">caniuse.com/woff</a>)</small></li>
+            </ul>
+          </section>
+          <section>
+            <p>… and so much more!</p>
+            <hr>
+            <ul>
+              <li>Domain sharding</li>
+              <li>Non-blocking JS loaders</li>
+              <li>Optimize images</li>
+              <li>Simplify CSS selectors</li>
+              <li>Split payload: minimal for first paint</li>
+              <li>Leverage <code>localStorage</code> &amp; application cache</li>
+              <li>Override TCP <code>initcwnd</code> configuration</li>
+              <li>…</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>My story</h2>
+            <ol>
+              <li class="fragment">Christmas vacation 2007
+                <ul>
+                  <li>I got <em>really annoyed</em> by slow sites.</li>
+                  <li>Student ⇒ plenty of time ⇒ article: <a href="http://wimleers.com/article/improving-drupals-page-loading-performance">“Improving Drupal's page loading performance”</a></li>
+                </ul>
+              </li>
+              <li class="fragment">2008: bachelor thesis: make Drupal faster.
+                <ol>
+                  <li><em>Measure</em>: Drupal <a href="http://drupal.org/project/episodes">Episodes module</a></li>
+                  <li><em>Sync</em>: <a href="http://fileconveyor.org">File Conveyor</a>: optimize files, sync to CDNs</li>
+                  <li><em>Integrate</em>: Drupal <a href="http://drupal.org/project/cdn">CDN module</a></li>
+                </ol>
+              </li>
+              <li class="fragment">2010: master thesis: WPO analytics</li>
+            </ol>
+            <p style="margin-top: 1em" class="fragment">… turned out to be great timing …</p>
+          </section>
+          <section>
+            <h2>Lucky timeline</h2>
+            <ul>
+              <li class="fragment">Jul 2009: bachelor thesis defended
+                <small>(>2.7 million measurements)</small>
+              </li>
+              <li class="fragment">Oct–Dec 2009: data mining course</li>
+              <li class="fragment">Dec 2009: master thesis proposal: mining episodes data</li>
+              <li class="fragment">Dec 2009: <a href="http://www.webpronews.com/google-page-speed-may-be-a-ranking-factor-in-2010-2009-12">page speed will be a Google ranking factor</a></li>
+              <li class="fragment">Nov 2010: master thesis literature study finished</li>
+              <li class="fragment">Dec 2010: wrote <a href="http://wimleers.com/article/performance-calendar-2010-wpo-analytics">“WPO Analytics”</a> for Perf Calendar</li>
+              <li class="fragment">Feb 2011: contacted by Facebook to work there — WTF?</li>
+              <li class="fragment">Apr 2011: accepted for Facebook internship!</li>
+              <li class="fragment">Jul 2011: master thesis defended</li>
+              <li class="fragment">Aug 2011: File Conveyor evaluated by <a href="http://whitehouse.gov">whitehouse.gov</a></li>
+              <li class="fragment">Sep–Dec 2011: internship: <a href="http://wimleers.com/tags/facebook">wimleers.com/tags/facebook</a></li>
+              <li class="fragment">Jan 2012: declined Facebook job offer</li>
+              <li class="fragment">May 2012: remote in Office of the CTO at <a href="http://acquia.com">Acquia</a>, full-time Drupal core</li>
+            </ul>
+            <aside class="notes">
+              <p>In the year preceding the start of my bachelor thesis, CDNs became more affordable, competition for the archetypical CDN (Akamai) stood up.</p>
+              <p>For my bachelor thesis, I collected a lot of data. I wasn't able to really analyze this data back then: I didn't know how, and it wasn't the core subject of my bachelor thesis. The next term I took a data mining course (and at the time I wasn't very interested in this). Lots of luck: I was able to connect the dots, proposed a master thesis to apply data mining to the data I'd collected for my bachelor thesis (and was still collecting).</p>
+              <p>Facebook found me by Googling (yes…) for WPO things: they were really looking for people on their Site Speed team. They found me via my blog.</p>
+              <p>Full-time on Drupal core is a bit like full-time on Linux kernel, though far less advanced.</p>
+            </aside>
+          </section>
+          <section>
+            <h3>So, studying…</h3>
+            <img src="img/uhasselt.jpg" alt="Photo of the Hasselt University entrance."/>
+          </section>
+          <section>
+            <h3>… plus open source contributions …</h3>
+            <img src="img/druplicon-lego.jpg" alt="Photo of a Druplicon built with LEGO bricks."/>
+          </section>
+          <section>
+            <h3>… plus <del>frustration</del> passion …</h3>
+            <img src="img/patience.png" alt="A comic about patience." />
+          </section>
+          <section>
+            <h3>… and hard work …</h3>
+            <img src="img/hard-work.jpg" alt="A visual metaphor for hard work." />
+          </section>
+          <section>
+            <h3>… got me a fancy internship…</h3>
+            <img src="img/first-week-facebook-badge.jpg" alt="Photo of the Facebook badge I got during my internship." />
+          </section>
+          <section>
+            <h3>… all helped me get my dream job.</h3>
+            <img src="img/dream_job.png" alt="Venn diagram about dream job." />
+          </section>
+        </section>
+
+        <section>
+          <section>
+             <h2>Profiling</h2>
+            <figure class="quote">
+              <blockquote>If you can not measure it, you can not improve it.
+              </blockquote>
+              <figcaption>Lord Kelvin</figcaption>
+            </figure>
+                       
+          </section>
+          <section>
+            <h3>Bachelor thesis</h3>
+            <blockquote>Make Drupal faster by integrating it with a CDN</blockquote>
+            <p>⇓</p>
+            <h4>How to measure?</h4>
+            <h4>Definition of "faster"?</h4>
+            <aside class="notes">
+              There are many, many factors that can influence the measures
+            </aside>
+          </section>
+          <section>
+            <h2>Performance monitoring</h2>
+            <ul>
+              <li>Synthetic: simulated users, controlled environment</li>
+              <li>Real: actual users <small>("RUM": Real User Monitoring)</small></li>
+            </ul>
+            <p style="margin-top: 1em">Development vs. production</p>
+          </section>
+          <section>
+            <h2>Navigation Timing</h2>
+            <ul>
+              <li>Deep stack visibility</li>
+              <li>Draft <a href="http://test.w3.org/webperf/specs/NavigationTiming/">W3C spec</a></li>
+              <li>Limited browser support (none of Apple's) <small><a href="http://caniuse.com/nav-timing">caniuse.com/nav-timing</a></small></li>
+              <li>Fallback: <a href="http://stevesouders.com/episodes2/">Episodes</a> <small>(used in bachelor thesis)</small> and <a href="http://yahoo.github.io/boomerang/doc/">Boomerang</a></li>
+            </ul>
+            <img src="img/caniuse-navtiming.png" alt="Navigation Timing browser support." />
+          </section>
+          <section>
+            <h2>Navigation Timing Example</h2>
+            <h3>Try it!</h3>
+            <img style="background: white" src="img/navigationtiming_timeline.png" alt="Navigation Timing spec timeline." />
+            <pre><code contenteditable class="javascript">var t = performance.timing;
+var htmlRenderTime = t.responseStart - t.requestStart;
+var htmlDownloadTime = t.responseEnd - t.responseStart;
+var usesRedirect = (t.redirectEnd - t.redirectStart) > 0;
+var timeToFirstByte = t.responseStart - t.navigationStart;
+var timeToFirstPaint = t.domInteractive - t.navigationStart;</code></pre>
+          </section>
+          <section>
+            <h2>UX basics</h2>
+            <ul>
+              <li style="color:#52B294">Stay under 0.25 s to feel "fast".</li>
+              <li style="color:#E55379">Stay under 1s to keep attention.</li>
+            </ul>
+            <hr>
+            <table>
+              <tr><th style="width:40%">Delay (s)</th><th>User reaction</th></tr>
+              <tr style="color:#52B294"><td>0–0.1</td><td>Instant</td></tr>
+              <tr><td>0.1–0.3</td><td>Feels sluggish</td></tr>
+              <tr><td>0.3–1</td><td>Machine is working…</td></tr>
+              <tr style="color:#E55379"><td>&gt;1</td><td>Mental context switch</td></tr>
+              <tr style="color:#E55379"><td>&gt;10</td><td>I'll come back later … maybe</td></tr>
+            </table>
+          </section>
+          <section>
+            <h2>Time to first paint</h2>
+            <p><small>Most important overall measure, not the only one!</small></p>
+            <p>AKA:</p>
+            <ul>
+              <li>Time to start render</li>
+              <li>Time to glass</li>
+              <li>…</li>
+            </ul>
+            <aside class="notes">
+              Before this, the user is staring at a blank page.
+            </aside>
+          </section>
+          <section>
+            <h3>Bachelor thesis</h3>
+            <blockquote>Make Drupal faster by integrating it with a CDN</blockquote>
+            <p>⇓</p>
+            <h4>How to measure?</h4>
+            <ul>
+              <li>Collect Navigation Timing data</li>
+              <li>For real users (RUM)</li>
+              <li>Aggregate</li>
+            </ul>
+            <h4 style="margin-top: 1em">Definition of "faster"?</h4>
+            <p>&lt;1s, but depends on: page complexity, location, device …</p>
+          </section>
+          <section>
+            <h2>Statistics</h2>
+            <ul>
+              <li>Average &amp; median too skewed.</li>
+              <li>Understand the distribution shape.</li>
+              <li>When setting goals: 75th percentile, 90th, 99th</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Continous &amp; smarter profiling</h2>
+            <p><em>Collecting</em> the data is only 10% of the work.</p>
+            <p><em>Understanding</em> it is much more difficult!</p>
+            <p>↓</p>
+            <p>data mining</p>
+            <aside class="notes">
+              From the massive set of data, you must extract the specific circumstances under which things are slow, in order to be reproduce it, because only then can you fix it — it may happen due to a browser quirk!
+            </aside>
+          </section>
+          <section>
+            <h2>Master thesis: WPO Analytics</h2>
+            <p style="margin-bottom: 1em">Automatically pinpoint causes of slow pages via data mining.</p>
+            <ul>
+              <li>"<code>example.com/fancy-page</code>'s <code>CSS</code> episode is slow"</li>
+              <li>"<code>example.com</code>'s <code>JS</code> episode is slow for <em>IE 8 &amp; 9</em> users."</li>
+              <li>"<code>example.com/some-page</code> is slow in <em>Belgium</em>"</li>
+              <li>"<code>example.com/gallery</code>'s <code>loadCarousel</code> episode is slow in <em>Belgium</em> for <em>Firefox 3</em> users"</li>
+            </ul>
+          </section>
+          <aside class="notes">
+            Respectively, detect: slow episodes, browser-specific problems, geographical problems, complex problems.
+          </aside>
+        </section>
+
+        <section>
+          <section>
+            <h2>How are we doing?</h2>
+            <img src="img/desktop-vs-mobile-1.png" alt="Chart showing mean &amp; median page load times on desktop &amp; mobile."/>
+            <img src="img/desktop-mobile-histogram-2.png" alt="Histogram showing page load times for desktop &amp; mobile." />
+            <p><small>As tracked by Google Analytics — April 2012</small></p>
+          </section>
+          <section>
+            <h2>Desktop</h2>
+            <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js"> {"dataSourceUrl":"//docs.google.com/spreadsheet/tq?key=0AnAS04-b9TCidFFJa0Z3d09BV1ZONHVTcXRRTWp6SWc&transpose=0&headers=1&range=C1%3AE215&gid=5&pub=1","options":{"vAxes":[{"viewWindowMode":"pretty","viewWindow":{}},{"viewWindowMode":"pretty","viewWindow":{}}],"useFormatFromData":true,"booleanRole":"certainty","height":350,"backgroundColor":"#cfe2f3","colors":["#d9ead3","#cc0000","#660000"],"width":540,"displayMode":"regions","datalessRegionColor":"#d9d9d9"},"state":{},"chartType":"GeoChart","chartName":"Chart 6"} </script> -->
+            <img src="img/map-desktop.png" alt="A map showing page load times around the world for desktops." />
+            <p><small>As tracked by Google Analytics — April 2012</small></p>
+          </section>
+          <section>
+            <h2>Mobile</h2>
+            <!-- <script src="http:////ajax.googleapis.com/ajax/static/modules/gviz/1.0/chart.js" type="text/javascript">{"dataSourceUrl":"//docs.google.com/a/google.com/spreadsheet/tq?key=0AnAS04-b9TCidFFJa0Z3d09BV1ZONHVTcXRRTWp6SWc&transpose=0&headers=1&range=B1%3AD51&gid=10&pub=1","options":{"vAxes":[{"viewWindowMode":"pretty","viewWindow":{}},{"viewWindowMode":"pretty","viewWindow":{}}],"useFormatFromData":true,"booleanRole":"certainty","backgroundColor":"#cfe2f3","colors":["#b6d7a8","#ea9999","#cc4125"],"displayMode":"regions","datalessRegionColor":"#d9d9d9","width":540,"height":350},"state":{},"chartType":"GeoChart","chartName":"Chart 4"}</script> -->
+            <img src="img/map-mobile.png" alt="A map showing page load times around the world for mobile devices."/>
+            <p><small>As tracked by Google Analytics — April 2012</small></p>            
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Profiling details: Chrome Dev Tools</h2>
+            <img src="img/best-friends.gif" alt="'Best friends' image." />
+            <aside class="notes">
+              Chrome Developer Tools: the web developer's best friend! Debug JavaScript, look at almost any piece of performance
+            </aside>
+          </section>
+          <section>
+            <p>Open Dev Tools, look at timeline</p>
+            <img src="img/chrome_devtools.png" />
+          </section>
+          <section>
+            <p>Look at headers of a specific resource</p>
+            <img src="img/chrome_devtools_network.png" />
+          </section>
+          <section>
+            <p>Network Utilization &amp; Web Page Performance audits</p>
+            <img src="img/chrome_devtools_audit.png" />
+          </section>
+          <section>
+            <p>CSS selector profiling (applied to these slides).</p>
+            <img src="img/chrome_devtools_profile_css.png" />
+          </section>
+          <section>
+            <p>Lots of settings.</p>
+            <img src="img/chrome_devtools_settings.png" />
+          </section>
+
+        </section>
+
+        <section>
+          <section>
+            <h2>Example: www.uhasselt.be</h2>
+            <h3>No optimization</h3>
+            <p>Pretty fast: ±1 second in Belgium</p>
+            <p>… but only in Belgium.</p>
+          </section>
+          <section>
+            <h2>Original</h2>
+            <img src="img/case/www.uhasselt.be/original-network.png" />
+            <p>53 requests, 618 KB, 613 ms DOMready, 919 ms onload</p>
+          </section>
+          <section>
+            <h2>Original</h2>
+            <h3>mobitest.akamai.com</h3>
+            <img src="img/case/www.uhasselt.be/original-mobitest.png" />
+            <p>iPhone 4, iOS 5, Cambridge MA, U.S.A.</p>
+          </section>
+          <section>
+            <h2>Minor optimizations</h2>
+            <p>Optimized images, aggregated JS, JS to bottom, expiration headers, gzipping, use CDN.</p>
+            <img src="img/case/www.uhasselt.be/optimized-network.png" />
+            <p>45 requests, 376 KB, 155 ms DOMready, 464 ms onload</p>
+          </section>
+          <section>
+            <h2>Optimized</h2>
+            <h3>mobitest.akamai.com</h3>
+            <img src="img/case/www.uhasselt.be/optimized-mobitest.png" />
+            <p>iPhone 4, iOS 5, Cambridge MA, U.S.A.</p>
+          </section>
+          <section>
+            <h2>ImageOptim</h2>
+            <img src="img/case/www.uhasselt.be/imageoptim.png" />
+          </section>
+          <section>
+            <p><a href="downloads/www.uhasselt.be-optimized.7z">Download optimized version</a></p>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Example: google.be</h2>
+            <h3>Extreme optimization</h3>
+            <img src="img/case/google.be/network.png" />
+            <p>11 requests, 274 KB, 107 ms DOMready, 595 ms onload</p>
+          </section>
+          <section>
+            <h2>Analysis</h2>
+            <ul>
+              <li>Zero CSS files — all CSS inlined!</li>
+              <li>A single request and the page becomes interactive!</li>
+              <li>Immediately thereafter:
+                <ul>
+                  <li><code>google.be/blank.html</code> — detect capturing proxies?</li>
+                  <li><code>google.be?rs=&lt;hash&gt;</code> — 171 KB worth of logic in JS! (Split payload.)</li>
+                  <li>Big logo.</li>
+                </ul>
+              </li>
+              <li>Then:
+                <ul>
+                  <li>Secondary images</li>
+                  <li>Personal metadata collection callback?</li>
+                  <li>Context (location etc.) callback?</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Example: wimleers.com</h2>
+            <h3>Some optimization</h3>
+            <img src="img/case/wimleers.com/network.png" />
+            <p>10 requests, 83.6 KB, 96 ms DOMready, 188 ms onload</p>
+          </section>
+          <section>
+            <h2>Analysis</h2>
+            <ul>
+              <li>Zero JS besides Google Analytics</li>
+              <li>Two requests and the page becomes interactive!</li>
+              <li>Immediately thereafter:
+                <ul>
+                  <li>Three data URI resources inlined in CSS: images + font</li>
+                  <li>Google Analytics' JS</li>
+                  <li>Two images referenced by the HTML</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <h2>Sources</h2>
+          <ul>
+            <li><a href="http://www.slideshare.net/stubbornella/designing-fast-websites-presentation">Design Fast Websites</a>, Nicole Sullivan, Yahoo!</li>
+            <li><a href="http://stevesouders.com/hpws/rules.php">14 Rules for Faster-Loading Web Sites</a>, Steve Souders</li>
+            <li><a href="http://www.webperformancetoday.com/2012/09/13/browser-innovation-performance-rules-faster-loading-websites-2/">Browser innovation and the 14 rules for faster loading websites: Revisiting Steve’s work (part 2)</a>, Tammy Everts</li>
+            <li><a href="http://analytics.blogspot.be/2012/04/global-site-speed-overview-how-fast-are.html">Global Site Speed Overview: How Fast Are Websites Around The World?</a>, Google Analytics team</li>
+            <li><a href="http://httparchive.org">httparchive.org</a></li>
+            <li><a href="http://igvita.com">igvita.com</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Recommended reading</h2>
+          <ul>
+            <li><a href="https://pinboard.in/u:wimleers/t:wpo+mustread">pinboard.in/u:wimleers/t:wpo+mustread</a></li>
+            <li>Anything by <a href="http://igvita.com">Ilya Grigorik</a></li>
+          </ul>
+        </section>
+
+        <section>
+          <h1>The end</h1>
+          <h2>Questions?</h2>
+          <p>
+            <a href="http://wimleers.com/talk/practical-wpo-intro-2013">wimleers.com/talk/practical-wpo-intro-2013</a>
+          </p>
+          <p><a href="http://wimleers.com/contact">wimleers.com/contact</a></p>
+        </section>
+
+      </div>
+
+    </div>
+
+    <script src="reveal.js/lib/js/head.min.js"></script>
+    <script src="reveal.js/js/reveal.min.js"></script>
+    <script src="js/chart.js/chart.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        rollingLinks: false,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+    </script>
+
+  </body>
+</html>

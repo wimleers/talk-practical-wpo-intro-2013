@@ -1,0 +1,6 @@
+[submodule "reveal.js"]
+	path = reveal.js
+	url = git://github.com/hakimel/reveal.js.git
+[submodule "js/chart.js"]
+	path = js/chart.js
+	url = git://github.com/nnnick/Chart.js.git

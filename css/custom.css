@@ -1,0 +1,43 @@
+/**
+ * Quotes done right, as per http://alistapart.com/blog/post/more-thoughts-about-blockquotes-than-are-strictly-required.
+ */
+figure.quote figcaption::before {
+  content: "— ";
+}
+figure.quote figcaption cite {
+  font-style: italic;
+}
+figure.quote figcaption cite::before {
+  content: "“";
+}
+figure.quote figcaption cite::after {
+  content: "”";
+}
+figure.quote blockquote strong {
+  font-weight: boldest;
+  font-size: 110%
+}
+
+/**
+ * Strikethrough fragment.
+ */
+.reveal .slides section .fragment.strikethrough {
+  opacity: 1;
+}
+.reveal .slides section .fragment.strikethrough.visible {
+  text-decoration: line-through;
+}
+
+/**
+ * Override to align <small> to the bottom.
+ */
+.reveal small {
+  vertical-align: bottom;
+}
+
+/**
+ * Ability to fade something less important out.
+ */
+.not-important {
+  opacity: 0.3;
+}
